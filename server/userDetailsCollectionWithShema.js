@@ -22,9 +22,9 @@ const mainSchema = mongoose.Schema({
 })
 
 
-const userDetailsCollection = mongoose.model("user_details", mainSchema);
+const user_details = mongoose.model("user_details", mainSchema);
 
-module.exports = userDetailsCollection;
+module.exports = user_details;
 
 
     /*email:{ 

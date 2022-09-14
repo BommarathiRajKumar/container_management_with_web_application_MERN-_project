@@ -1,9 +1,8 @@
 
-
-const Profile = function test(){
+function Profile({details}){
     return(
         <div>
-            it is Profile Page...
+           <div>Profile {details}</div>
         </div>
     )
 }

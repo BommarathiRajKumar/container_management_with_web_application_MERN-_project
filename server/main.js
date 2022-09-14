@@ -4,7 +4,7 @@ const port = 9000;
 const mongoose = require("mongoose");
 const cors = require("cors");
 //importing user_details Collection which is arranged with proper schema from dbSchema.js file
-const userDetailsCollection = require("./userDetailsCollectionWithShema")
+const user_details = require("./userDetailsCollectionWithShema")
 
 //Connecting to MongoDataBase (specific databBase) using Mongoose.
 //it will take one argumet that is db connection string which will help us to connet to database
@@ -16,7 +16,6 @@ mongoose.connect( "mongodb://127.0.0.1:27017/users").then(
 
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-
 app.use(cors({
     origin: 'http://localhost:3000'
 }))
@@ -27,33 +26,86 @@ app.use(cors({
 //every method will take two arguments firtst argument is URL path and second one will fun.
 //again secon argument fun will take two arguments one argument is request is for take input from browser and second one is responce is for send back the response to the browser. 
 //async will handle the delay time when we insert the data into the the DB.
-
-app.post("/userDetailsSaveToDb", async(req, res) =>{
-    const var2_id = req.body.userDetails.mobileNumber;
-    const var2email = req.body.userDetails.email;
-    const var2profileName = req.body.userDetails.profileName;
-    const var2password = req.body.userDetails.password;
+app.post("/newUserCreation", async (req, resp) => {
+    const newUser_Details = new user_details({
+        _id:         req.body.userDetails.mobileNumber,
+        email:       req.body.userDetails.email,
+        profileName: req.body.userDetails.profileName,
+        password:    req.body.userDetails.password
+    });
     try{
-        const saveToDb =new userDetailsCollection({
-            _id: var2_id,
-            email: var2email,
-            profileName: var2profileName,
-            password: var2password
-            
-        });
-        await saveToDb.save();
-        return res.json(await userDetailsCollection.find() )
-    
-
+        user_details.findOne({_id: newUser_Details._id}, async(err, userDetailsNumber) => {
+            if(err){
+                console.log(err)
+            }else if(userDetailsNumber == null){
+                user_details.findOne({email: newUser_Details.email}, async (err, userDetailsEmail) => {
+                    if(err){
+                        console.log(err)
+                    }else if(userDetailsEmail == null){
+                        await newUser_Details.save();
+                        resp.send("userCreated");
+                    }else{
+                        resp.send("providedEmailExist");
+                    }
+                })
+            }else{
+                resp.send("providedNumberExist");
+            }
+        })
     }catch(err){
         console.log(err)
     }
 })
-app.get("/", (rep,res) => res.sendFile(__dirname +"/index.html"))
 
-app.get("/getDbData", async function(req, res){
-    return res.json(await userDetailsCollection.find() )
+app.post("/userProfileDetailsLoad", (req, resp) => {
+    const userNumber = req.body.credentials.mobileNumber
+    const userPassword = req.body.credentials.password
+    try{
+        user_details.findOne({_id: userNumber}, (err, userDetails) => {
+            if(err){
+                console.log(err)
+            }else if(userDetails == null){
+                resp.send("InvalidCredentailsPleaseCheckMobileNumberANdPassword");
+            }else if(userDetails.password === userPassword){
+                userDetails.password = ""
+                resp.send(userDetails);
+                
+            }else if(userDetails.password !== userPassword){
+                resp.send("InvalidCredentailsPleaseCheckMobileNumberANdPassword")
+            }
+        })
+    }catch(err){
+        console.log(err)
+    }
 })
+
+
+app.route("/user_details/:_id")
+.get((req, resp) => {
+    user_details.findOne({_id: req.params._id}, (err, userDetails) =>{
+        if(err){
+            resp.send("user not found");
+        }else{
+            resp.send(userDetails);        
+        }
+    }) 
+})
+
+.patch((req, resp) => {
+    user_details.updateOne({_id: req.params._id} , {profileName: req.body.newName},(err) => {
+        if(err){
+            console.log(err)
+            resp.send(err)
+        }else{
+            resp.send("Patched")
+        }
+    })
+})
+
+
+
+
+
 
 
 
