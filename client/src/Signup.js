@@ -25,7 +25,7 @@ function Signup(){
         
     }
 
-    //by this Handler we are submiting the updated details to backend and we can do form validation here only.
+    //by this Handler we are submiting the updated details to backend and we are doing form validation here only.
     const userDeatilsSubmitHandler = e => {
         var space = profileName.match(/\s/g)
         if( profileName === "" || space !== null){
@@ -80,7 +80,8 @@ function Signup(){
                 }else{
                     setMobileExistErr(false);
                     setEmailExistErr(false);
-                    window.location.replace("http://localhost:3000/profile");  
+                    alert("user created successfully")
+                    window.location.replace("http://localhost:3000/login");  
                 }
             })
         }

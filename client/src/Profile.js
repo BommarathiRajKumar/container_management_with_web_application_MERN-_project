@@ -1,8 +1,15 @@
+import { useContext } from "react";
+import {userContext} from "./Login.js";
 
-function Profile({details}){
+
+function Profile(){
+    const details = useContext(userContext);
     return(
         <div>
-           <div>Profile {details}</div>
+           <div>
+            checking
+            {details}
+            </div>
         </div>
     )
 }
