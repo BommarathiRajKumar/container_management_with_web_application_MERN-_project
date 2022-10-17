@@ -28,12 +28,12 @@ app.use(cors({
 //every method will take two arguments firtst argument is URL path and second one will fun.
 //again secon argument fun will take two arguments one argument is request is for take input from browser and second one is responce is for send back the response to the browser. 
 //async will handle the delay time when we insert the data into the the DB.
-app.post("/newUserCreation", async (req, resp) => {
+app.post("/signup", async (req, resp) => {
     try{
         user_details.findOne({_id: req.body.userDetails.mobileNumber}, async(err, userNumber) => {
             if(err){
                 console.log(err)
-                return resp.status(500).send("server error")
+                return resp.status(500).send("server error");
             }else if(userNumber == null){
                 user_details.findOne({email: req.body.userDetails.email}, async (err, userEmail) => {
                     if(err){
@@ -46,13 +46,13 @@ app.post("/newUserCreation", async (req, resp) => {
                             password:    req.body.userDetails.password
                         });
                         await newUser_Details.save();
-                        resp.send("userCreated"); 
+                        return resp.status(200).send("userCreated"); 
                     }else{
-                        return resp.status(400).send("providedEmailExist");
+                        return resp.status(401).send("providedEmailExist");
                     }
                 })
             }else{
-                return resp.status(400).send("providedNumberExist");
+                return resp.status(400).send("mobileNumberExist");
             }
         })
     }catch(err){
@@ -99,7 +99,6 @@ app.get("/profile", middleware, async(req, resp) => {
             if(err){
                 console.log(err);
                 return resp.status(500).send("server error")
-
             }else if(userDetails == null){
                 return resp.status(400).send("user not found")
             }else{
@@ -107,14 +106,18 @@ app.get("/profile", middleware, async(req, resp) => {
             }
             
         })
-
-
     }catch(err){
         console.log(err);
-        return resp.status(500).send("serv error")
+        return resp.status(500).send("server error")
 
     }
 })
+
+
+
+
+
+
 
 /*
 app.route("/user_details/:_id")

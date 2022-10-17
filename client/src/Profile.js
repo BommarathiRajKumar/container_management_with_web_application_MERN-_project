@@ -5,7 +5,7 @@ import axios from 'axios'
 
 
 function Profile(){
-    const [token, setToken] = useContext(store);
+    const [token,setToken] = useContext(store);
     const [data,setData] = useState(null);
     useEffect(() => {
         axios.get("http://localhost:9000/profile",{

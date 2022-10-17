@@ -1,5 +1,6 @@
 import { useState } from "react";
-import axios from "axios"
+import axios from "axios";
+//import { Redirect } from "react-router-dom";
 
 function Signup(){
     var [profileNameErr, setProfileNameErr] = useState();
@@ -9,6 +10,7 @@ function Signup(){
     var [passwordMatchErr, setPasswordMatchErr] = useState();
     var [mobileExistErr, setMobileExistErr] = useState();
     var [emailExistErr, setEmailExistErr] = useState();
+    let [serverErr, setServerErr] = useState(false);
     var [userDetails,setUserDetails] = useState({
         mobileNumber: '',
         email: '',
@@ -70,21 +72,29 @@ function Signup(){
             setEmailErr(false);
             setPasswordErr(false);
             setPasswordMatchErr(false);
-            axios.post('http://localhost:9000/newUserCreation', {userDetails}).then((response) => {
-                if(response.data === "providedNumberExist"){
+
+            
+            axios.post('http://localhost:9000/signup', {userDetails}).then((response) => {
+                if(response.status === 200){
+                    alert("user created successfully")
+                    window.location.replace("http://localhost:3000/login");
+                }else{
+                    setServerErr(true);
+                }
+            }).catch((error) => {
+                if (error.response.status === 400) {
                     setMobileExistErr(true);
                     setEmailExistErr(false);
-                }else if(response.data === "providedEmailExist"){
+                }else if(error.response.status === 401){
                     setMobileExistErr(false);
                     setEmailExistErr(true);
-                }else{
-                    setMobileExistErr(false);
-                    setEmailExistErr(false);
-                    alert("user created successfully")
-                    window.location.replace("http://localhost:3000/login");  
+                }else if(error.response.status === 500){
+                    setServerErr(true);
                 }
             })
+           
         }
+        
     }
     
 
@@ -99,6 +109,7 @@ function Signup(){
                 {passwordMatchErr ?<div>password and confirm password not matched</div>:null}
                 {mobileExistErr ?<div>provided mobile number is already registered</div>:null}
                 {emailExistErr ? <div>provided email is already registered</div>:null}
+                {serverErr ?<div>Internall Server Error please try again by refreshing the page.</div>:null}
                 <input type="text" placeholder="ProfileName" name="profileName" value={profileName} onChange={updateHandler}/><br/><br/>
                 <input type="text" placeholder="Mobile Number" name="mobileNumber" value={mobileNumber} onChange={updateHandler}/><br/><br/>
                 <input type="email" placeholder="Mail" name="email" value={email} onChange={updateHandler}/><br/><br/>

@@ -31,7 +31,6 @@ const Login = () => {
             //By using axios we can make an request to backend like an API call.
             
             function (response) {
-                console.log("axios working")
             if(response.data === "InvalidCredentails"){
                 setCredentialsErr(true)
             }else{
