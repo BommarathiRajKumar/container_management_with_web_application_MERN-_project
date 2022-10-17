@@ -81,14 +81,14 @@ function Signup(){
                 }else{
                     setServerErr(true);
                 }
-            }).catch((error) => {
-                if (error.response.status === 400) {
+            }).catch((err) => {
+                if (err.response.status === 400) {
                     setMobileExistErr(true);
                     setEmailExistErr(false);
-                }else if(error.response.status === 401){
+                }else if(err.response.status === 401){
                     setMobileExistErr(false);
                     setEmailExistErr(true);
-                }else if(error.response.status === 500){
+                }else if(err.response.status === 500){
                     setServerErr(true);
                 }
             })

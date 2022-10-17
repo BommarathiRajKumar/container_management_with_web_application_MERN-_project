@@ -70,8 +70,8 @@ app.post("/login", async(req, resp) => {
             if(err){
                 console.log(err)
                 return resp.status(500).send("server error")
-            }else if(userDetails == null){
-                resp.send("InvalidCredentails")
+            }else if(userDetails == null || userDetails.password !== password){
+                return resp.status(401).send("InvalidCredentails")
             }else if(userDetails.password == password){
                 let payload ={
                     user:{
@@ -81,8 +81,7 @@ app.post("/login", async(req, resp) => {
                 jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:36000},
                 (err, token) =>{
                     if(err) throw err;
-                    return resp.json({token})
-        
+                    return resp.status(200).json({token})
                 });
             }
         });
