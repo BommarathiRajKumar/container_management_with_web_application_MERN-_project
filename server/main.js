@@ -29,14 +29,14 @@ app.use(cors({
 //async will handle the delay time when we insert the data into the the DB.
 app.post("/newUserCreation", async (req, resp) => {
     try{
-        user_details.findOne({_id: req.body.userDetails.mobileNumber}, async(err, userDetailsNumber) => {
+        user_details.findOne({_id: req.body.userDetails.mobileNumber}, async(err, userNumber) => {
             if(err){
                 console.log(err)
-            }else if(userDetailsNumber == null){
-                user_details.findOne({email: req.body.userDetails.email}, async (err, userDetailsEmail) => {
+            }else if(userNumber == null){
+                user_details.findOne({email: req.body.userDetails.email}, async (err, userEmail) => {
                     if(err){
                         console.log(err)
-                    }else if(userDetailsEmail == null){
+                    }else if(userEmail == null){
                         const newUser_Details = new user_details({
                             _id:         req.body.userDetails.mobileNumber,
                             email:       req.body.userDetails.email,
@@ -63,27 +63,25 @@ app.post("/login", async(req, resp) => {
         //const userNumber = req.body.credentials.mobileNumber
         //const userPassword = req.body.credentials.password
         const {mobileNumber, password} = req.body;
-        console.log(mobileNumber)
-        let exist = await user_details.findOne({_id: mobileNumber});
+        user_details.findOne({_id: mobileNumber}, async (err, userDetails) =>{
+            if(err){
+                console.log(err)
+            }else if(userDetails == null || userDetails.password !== password){
+                resp.send("InvalidCredentails")
+            }else if(userDetails.password == password){
+                let payload ={
+                    user:{
+                        id: userDetails._id
+                    }
+                }
+                jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:360000},
+                (err, token) =>{
+                    if(err) throw err;
+                    return resp.json({token})
         
-        console.log(exist)
-        if(!exist){
-            resp.send("userNotFound");
-        }
-        if(exist.password !== password){
-            resp.send("InvalidCredentailsPleaseCheckMobileNumberANdPassword");
-        }
-        let payload ={
-            user:{
-                id: exist._id
+                });
             }
-        }
-        jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:360000},
-            (err, token) =>{
-                if(err) throw err;
-                return resp.json({token})
-
-            });
+        });
     }catch(err){
         console.log(err)
     }
