@@ -4,6 +4,7 @@ const port = 9000;
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const middleware = require("./middleware");
 //importing user_details Collection which is arranged with proper schema from dbSchema.js file
 const user_details = require("./userDetailsCollectionWithShema")
 
@@ -32,6 +33,7 @@ app.post("/newUserCreation", async (req, resp) => {
         user_details.findOne({_id: req.body.userDetails.mobileNumber}, async(err, userNumber) => {
             if(err){
                 console.log(err)
+                return resp.status(500).send("server error")
             }else if(userNumber == null){
                 user_details.findOne({email: req.body.userDetails.email}, async (err, userEmail) => {
                     if(err){
@@ -46,27 +48,29 @@ app.post("/newUserCreation", async (req, resp) => {
                         await newUser_Details.save();
                         resp.send("userCreated"); 
                     }else{
-                        resp.send("providedEmailExist");
+                        return resp.status(400).send("providedEmailExist");
                     }
                 })
             }else{
-                resp.send("providedNumberExist");
+                return resp.status(400).send("providedNumberExist");
             }
         })
     }catch(err){
         console.log(err)
+        return resp.status(500).send("server error")
     }
 })
 
 app.post("/login", async(req, resp) => {
     try{
-        //const userNumber = req.body.credentials.mobileNumber
-        //const userPassword = req.body.credentials.password
-        const {mobileNumber, password} = req.body;
+        const mobileNumber = req.body.credentials.mobileNumber
+        const password = req.body.credentials.password
+        //const {mobileNumber, password} = req.body;
         user_details.findOne({_id: mobileNumber}, async (err, userDetails) =>{
             if(err){
                 console.log(err)
-            }else if(userDetails == null || userDetails.password !== password){
+                return resp.status(500).send("server error")
+            }else if(userDetails == null){
                 resp.send("InvalidCredentails")
             }else if(userDetails.password == password){
                 let payload ={
@@ -74,7 +78,7 @@ app.post("/login", async(req, resp) => {
                         id: userDetails._id
                     }
                 }
-                jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:360000},
+                jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:36000},
                 (err, token) =>{
                     if(err) throw err;
                     return resp.json({token})
@@ -83,11 +87,36 @@ app.post("/login", async(req, resp) => {
             }
         });
     }catch(err){
-        console.log(err)
+        console.log(err);
+        return resp.status(500).send("server error")
+
+    } 
+})
+
+app.get("/profile", middleware, async(req, resp) => {
+    try{
+        user_details.findById(req.user.id, async (err, userDetails) =>{
+            if(err){
+                console.log(err);
+                return resp.status(500).send("server error")
+
+            }else if(userDetails == null){
+                return resp.status(400).send("user not found")
+            }else{
+                resp.json(userDetails)
+            }
+            
+        })
+
+
+    }catch(err){
+        console.log(err);
+        return resp.status(500).send("serv error")
+
     }
 })
 
-
+/*
 app.route("/user_details/:_id")
 .get((req, resp) => {
     user_details.findOne({_id: req.params._id}, (err, userDetails) =>{
@@ -108,6 +137,7 @@ app.route("/user_details/:_id")
         }
     })
 })
+*/
 //Starting server by assining the particular port number.
 //listen wil take two arguments one is port num and fun.
 app.listen(port, () => console.log(`your sever start at ${port}`) )
