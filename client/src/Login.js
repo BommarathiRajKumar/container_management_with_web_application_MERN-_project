@@ -1,7 +1,7 @@
-import { useState, useContext} from "react";
+import { useState} from "react";
 import axios from "axios";
 import "./loginPage.css";
-import {store} from "./App"
+
 import { Redirect } from "react-router-dom";
  
     //if you want to run any fun after return then use useEffect(Hook) fun/method
@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
 
 
 const Login = () => {
-    const [token, setToken] = useContext(store)
+    const [token, setToken] = useState(localStorage.getItem('token'))
     //useState ReactHook this RactHook's always use in fun level components only don't use in class level components.
    //To use useState Hook we want to use(or)assign one var&one fun. var is for to assign the value which is given by us and fun is for to change the value of first var.
     const[credentialsErr, setCredentialsErr] = useState();
@@ -28,13 +28,13 @@ const Login = () => {
     const userCredentialsSubmitHandler = e => {
         e.preventDefault();
         //By using the preventDefault() we can stop the reloding of form(or)this will prevent all the default activies.
+        
         axios.post("http://localhost:9000/login", {credentials}).then(
             //By using axios we can make an request to backend like an API call.
             function (response) {
             if(response.status === 200){
-                setCredentialsErr(false)
-                setServerErr(false)
                 setToken(response.data.token)
+                localStorage.setItem('token',response.data.token)
             }else{
                 setServerErr(true)
             }
@@ -47,9 +47,11 @@ const Login = () => {
             
         })
     }
-    if(token){
+    if(token !== null){
         return <Redirect to="/profile" />
     }
+    
+
     return( 
         <div>
             <form onSubmit={userCredentialsSubmitHandler} autoComplete="off">

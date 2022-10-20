@@ -1,25 +1,26 @@
-import {useContext,useState, useEffect} from 'react'
-import {store} from "./App"
+import {useState} from 'react'
 import {Redirect} from "react-router-dom"
 import axios from 'axios'
 
 
 function Profile(){
-    const [token,setToken] = useContext(store);
+    const [token, setToken] = useState(localStorage.getItem('token'))
     const [data,setData] = useState(null);
-    useEffect(() => {
+    
+
+   
+    if(token === null){
+        localStorage.removeItem('token')
+        return <Redirect to="/login" />
+    }else{
         axios.get("http://localhost:9000/profile",{
-            headers: {
+            headers:{
                 'x-token' : token
             }
         }).then(resp => setData(resp.data)).catch((err) => console.log(err))
-
-    })
-
-
-    if(!token){
-        return <Redirect to="/login" />
     }
+
+
     return(
         <div>
             {
