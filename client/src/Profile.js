@@ -17,8 +17,13 @@ function Profile(){
             headers:{
                 'x-token' : token
             }
-        }).then(resp => setData(resp.data)).catch((err) => console.log(err))
+        }).then(resp => setData(resp.data)).catch((err) => {
+            if(err.response.status === 500){
+                setToken(null)
+            }
+        })
     }
+
 
 
     return(
@@ -29,6 +34,8 @@ function Profile(){
                     well come : {data.profileName}
                     <br/>
                     <button onClick={() => setToken(null)}>Logout</button>
+
+
                 </center>
             }
         

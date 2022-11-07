@@ -78,7 +78,7 @@ app.post("/login", async(req, resp) => {
                         id: userDetails._id
                     }
                 }
-                jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:36000},
+                jwt.sign(payload, 'jwtSecurtyKey', {expiresIn:30000},
                 (err, token) =>{
                     if(err) throw err;
                     return resp.status(200).json({token})
@@ -101,13 +101,14 @@ app.get("/profile", middleware, async(req, resp) => {
             }else if(userDetails == null){
                 return resp.status(400).send("user not found")
             }else{
+                userDetails.password = ""
                 resp.json(userDetails)
             }
             
         })
     }catch(err){
         console.log(err);
-        return resp.status(500).send("server error")
+        return resp.status(500).send("Invalid token or token expired")
 
     }
 })
