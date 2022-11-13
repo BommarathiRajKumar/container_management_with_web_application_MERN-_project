@@ -1,7 +1,6 @@
 import { useState} from "react";
 import axios from "axios";
-import "./loginPage.css";
-
+import "./login.css";
 import { Redirect } from "react-router-dom";
  
     //if you want to run any fun after return then use useEffect(Hook) fun/method
@@ -15,7 +14,8 @@ const Login = () => {
     //useState ReactHook this RactHook's always use in fun level components only don't use in class level components.
    //To use useState Hook we want to use(or)assign one var&one fun. var is for to assign the value which is given by us and fun is for to change the value of first var.
     const[credentialsErr, setCredentialsErr] = useState();
-    let [serverErr, setServerErr] = useState(false);
+    const [serverErr, setServerErr] = useState(false);
+    const [redirect, setRedirect] = useState(false);
     const [credentials, setCredentails] = useState({
         mobileNumber: '',
         password: ''
@@ -47,20 +47,43 @@ const Login = () => {
             
         })
     }
+
     if(token !== null){
         return <Redirect to="/profile" />
     }
     
+    const signupRedirect = e =>{
+        setRedirect(true)
+    }
+
+    if(redirect === true) {
+        return <Redirect to="/signup" />
+    }
+
+    
 
     return( 
-        <div>
-            <form onSubmit={userCredentialsSubmitHandler} autoComplete="off">
-                {credentialsErr ? <div>Invalid Credentails Please check the mob and password</div>: null}
-                {serverErr ?<div>Internall Server Error please try again by refreshing the page.</div>:null}
-                <input type="text" placeholder="mobile number" name="mobileNumber" value={mobileNumber} onChange={updateHandler}/><br/>
-                <input type="password" placeholder="password" name="password" value={password} onChange={updateHandler}/><br/>
-                <input type="submit" value="Login"/>
+        <div style={{position: "absolute", left: 600}}>
+             
+            <h1>Container Manage Platform</h1>
+            {credentialsErr ? <div className="error">Invalid Credentails Please check the mob and password</div>: null}
+            {serverErr ?<div className="error">Internall Server Error please try again after some time.</div>:null}
+
+            <form onSubmit={userCredentialsSubmitHandler} autoComplete="of">
+                <div>Mobile Number</div>
+                <input type="text" className="input" name="mobileNumber" value={mobileNumber} onChange={updateHandler} /><br/><br/>
+
+                <div>Password</div>
+                <a href="http://localhost:3000" id="forgotPassword">Forgot password</a>
+                <input type="password" className="input" name="password" value={password} onChange={updateHandler}/><br/><br/>
+
+                <button className="button" style={{background: "green", height: 35}}>Login</button><br/><br/><br/>
             </form>
+            
+            <div>---------------------New to CMP?-------------------</div><br/>
+            <button className="button"  onClick={signupRedirect} style={{background: "grey", height: 46}}>Create an account</button>
+
+
         </div>
     )
 }

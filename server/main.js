@@ -11,7 +11,7 @@ const user_details = require("./userDetailsCollectionWithShema")
 //Connecting to MongoDataBase (specific databBase) using Mongoose.
 //it will take one argumet that is db connection string which will help us to connet to database
 //we can also send an second arugment for deprication warnings.
-mongoose.connect( "mongodb://127.0.0.1:27017/users").then(
+mongoose.connect("mongodb://127.0.0.1:27017/users").then(
     () => console.log("DB Connected Successfully")
 )
 
@@ -39,14 +39,8 @@ app.post("/signup", async (req, resp) => {
                     if(err){
                         console.log(err)
                     }else if(userEmail == null){
-                        const newUser_Details = new user_details({
-                            _id:         req.body.userDetails.mobileNumber,
-                            email:       req.body.userDetails.email,
-                            profileName: req.body.userDetails.profileName,
-                            password:    req.body.userDetails.password
-                        });
-                        await newUser_Details.save();
-                        return resp.status(200).send("userCreated"); 
+                        var otp = 123
+                        return resp.status(200).send("userCreated");
                     }else{
                         return resp.status(401).send("providedEmailExist");
                     }
@@ -59,6 +53,30 @@ app.post("/signup", async (req, resp) => {
         console.log(err)
         return resp.status(500).send("server error")
     }
+})
+
+
+app.post("/otpValidate", async (req, resp) =>{
+    try{
+        if(req.body.userDetails.otp === "123"){
+            var newUser_Details = new user_details({
+                _id:         req.body.userDetails.mobileNumber,
+                email:       req.body.userDetails.email,
+                profileName: req.body.userDetails.profileName,
+                password:    req.body.userDetails.password
+            });
+            console.log("user Created")
+            await newUser_Details.save();
+            return resp.status(200).send("userCreated");
+        }else{
+            return resp.status(400).send("invalidOtp");
+        }
+
+    }catch(err){
+        console.log(err)
+        return resp.status(500).send("server error")
+    }
+
 })
 
 app.post("/login", async(req, resp) => {
@@ -112,12 +130,6 @@ app.get("/profile", middleware, async(req, resp) => {
 
     }
 })
-
-
-
-
-
-
 
 /*
 app.route("/user_details/:_id")

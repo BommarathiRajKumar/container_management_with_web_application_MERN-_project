@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "./signup.css"
 //import { Redirect } from "react-router-dom";
 
 function Signup(){
@@ -11,17 +12,19 @@ function Signup(){
     var [mobileExistErr, setMobileExistErr] = useState();
     var [emailExistErr, setEmailExistErr] = useState();
     var [serverErr, setServerErr] = useState(false);
-    var [otp, setOtp] = useState(false);
+    var [otpRecevied, setOtpRecevied] = useState(false);
 
     var [userDetails,setUserDetails] = useState({
         mobileNumber: '',
         email: '',
         profileName: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        otp: ''
+
     });
     //objectDestructuring
-    const {mobileNumber, email, profileName, password, confirmPassword}  = userDetails
+    const {mobileNumber, email, profileName, password, confirmPassword, otp}  = userDetails
 
     //by this Handler we are updating the userDeatils varables with particular user inputs.
     const updateHandler = e => {
@@ -80,7 +83,7 @@ function Signup(){
                 if(response.status === 200){
                     //alert("user created successfully")
                     //window.location.replace("http://localhost:3000/login");
-                    setOtp(true);
+                    setOtpRecevied(true);
 
                 }else{
                     setServerErr(true);
@@ -96,36 +99,66 @@ function Signup(){
                     setServerErr(true);
                 }
             })
-           
         }
+    }
+
+    const otpUdateHandler = e => {
+        setUserDetails({...userDetails,[e.target.name]:e.target.value})
         
+    }
+    const otpValidateHandler = e => {
+        e.preventDefault();
+        axios.post('http://localhost:9000/otpValidate', {userDetails}).then((response) =>{
+            if(response.status === 200){
+                alert("user Created Successfully")
+                window.location.replace("http://localhost:3000/login")
+            }else{
+                alert("internal server error")
+            }
+        }).catch((err) => {
+            if(err.response.status === 400){
+                alert("InvalidOtp")
+            }else if(err.response.status === 500){
+                setServerErr(true);
+            }
+        })
     }
 
     return(
         <div>
-            <h1>User Creation</h1>
-            <form method="post" onSubmit={userDeatilsSubmitHandler}>
-                {profileNameErr ? <div>profileName should not contain white spaces</div>:null} 
-                {mobileErr ? <div>Invalid mobile number please check it</div>:null}
-                {emailErr ? <div>Invalid email</div>:null}
-                {passwordErr ? <div>Password must be (8-15 charecters) with 'A-Z,a-z,@,#,$,%.</div>:null}
-                {passwordMatchErr ?<div>password and confirm password not matched</div>:null}
-                {mobileExistErr ?<div>provided mobile number is already registered</div>:null}
-                {emailExistErr ? <div>provided email is already registered</div>:null}
-                {serverErr ?<div>Internall Server Error please try again by refreshing the page.</div>:null}
-                <input type="text" placeholder="ProfileName" name="profileName" value={profileName} onChange={updateHandler}/><br/><br/>
-                <input type="text" placeholder="Mobile Number" name="mobileNumber" value={mobileNumber} onChange={updateHandler}/><br/><br/> 
-                <input type="email" placeholder="Mail" name="email" value={email} onChange={updateHandler}/><br/><br/>
-                <input type="password" placeholder="Password" name="password" value={password} onChange={updateHandler}/><br/><br/>
-                <input type="password" placeholder="Confirm Password" name="confirmPassword" value={confirmPassword} onChange={updateHandler}/><br/><br/>
-            
-                {otp == false? <input type="submit"/>:null}
-                {otp == true? <div>Please enter otp recevied by mobile number.</div>:null}
-                {otp == true? <input type="text" placeholder="OTP"/>:null}
-                {otp == true? <input type="submit" value="Validate"/>:null}
-            </form>
+            <h1>New User Signup</h1>
+            {otpRecevied === false? 
+                <form method="post" onSubmit={userDeatilsSubmitHandler}>
+                    {profileNameErr ? <div className="error">profileName should not contain white spaces</div>:null} 
+                    {mobileErr ? <div className="error">Invalid mobile number please check it</div>:null}
+                    {emailErr ? <div className="error">Invalid email</div>:null}
+                    {passwordErr ? <div className="error">Password must be (8-15 charecters) with 'A-Z,a-z,@,#,$,%.</div>:null}
+                    {passwordMatchErr ?<div className="error">password and confirm password not matched</div>:null}
+                    {mobileExistErr ?<div className="error">provided mobile number is already registered</div>:null}
+                    {emailExistErr ? <div className="error">provided email is already registered</div>:null}
+                    {serverErr ?<div className="error">Internall Server Error please try again by refreshing the page.</div>:null}
+                    <div>ProfileName</div>
+                    <input type="text" className="input" name="profileName" value={profileName} onChange={updateHandler}/><br/><br/>
+                    <div>MobileNumber</div>
+                    <input type="text" className="input" name="mobileNumber" value={mobileNumber} onChange={updateHandler}/><br/><br/>
+                    <div>Email</div> 
+                    <input type="email" className="input" name="email" value={email} onChange={updateHandler}/><br/><br/>
+                    <div>Password</div>
+                    <input type="password" className="input" name="password" value={password} onChange={updateHandler}/><br/><br/>
+                    <div>ConfirmPassword</div>
+                    <input type="password" className="input" name="confirmPassword" value={confirmPassword} onChange={updateHandler}/><br/><br/>
+                    <button className="button">Submit</button>
+                </form>
+            :null}
+
+            {otpRecevied === true?
+                <form method="post" onSubmit={otpValidateHandler}>
+                    <div>Please enter otp recevied by mobile number.</div>
+                    <input type="text" placeholder="OTP" name="otp" value={otp} onChange={otpUdateHandler}/>
+                    <input type="submit" value="Validate"/>
+                </form>
+            :null}
         </div>
-        
     )
 }
 

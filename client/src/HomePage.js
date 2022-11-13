@@ -6,7 +6,7 @@ import {Link} from "react-router-dom"
 function Home(){
     return(
         <div>
-            Well come to container management platform...
+            <h1>Well Come To Container Management Platform...</h1>
             <Link to="/signup"><div>Signup</div></Link>
             <Link to="/login"><div>Login</div></Link>
         </div>
