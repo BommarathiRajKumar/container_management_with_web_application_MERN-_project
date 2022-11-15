@@ -31,6 +31,7 @@ app.use(cors({
 app.post("/signup", async (req, resp) => {
     try{
         user_details.findOne({_id: req.body.userDetails.mobileNumber}, async(err, userNumber) => {
+            
             if(err){
                 console.log(err)
                 return resp.status(500).send("server error");
@@ -39,8 +40,9 @@ app.post("/signup", async (req, resp) => {
                     if(err){
                         console.log(err)
                     }else if(userEmail == null){
-                        var otp = 123
-                        return resp.status(200).send("userCreated");
+                        serverOtp = 123
+                        resp.status(200).send("otpSendSucessfully");
+
                     }else{
                         return resp.status(401).send("providedEmailExist");
                     }
@@ -55,18 +57,20 @@ app.post("/signup", async (req, resp) => {
     }
 })
 
-
+var serverOtp = null
 app.post("/otpValidate", async (req, resp) =>{
     try{
-        if(req.body.userDetails.otp === "123"){
+        if(serverOtp === null){
+            return resp.status(400).send("invalidOtp");
+        }else if(req.body.userDetails.otp === serverOtp.toString()){
             var newUser_Details = new user_details({
                 _id:         req.body.userDetails.mobileNumber,
                 email:       req.body.userDetails.email,
                 profileName: req.body.userDetails.profileName,
                 password:    req.body.userDetails.password
             });
-            console.log("user Created")
             await newUser_Details.save();
+            serverOtp = null
             return resp.status(200).send("userCreated");
         }else{
             return resp.status(400).send("invalidOtp");

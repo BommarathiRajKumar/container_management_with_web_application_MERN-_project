@@ -1,0 +1,52 @@
+.divColor{
+    color: rgb(223, 220, 220);
+}
+.error{
+    color: rgb(232, 80, 80);
+    font-size: 18px;
+}
+div#divSpace{
+    width:15px;
+    display: inline-block;
+}
+.input{
+    font-size: 15px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: rgb(177, 216, 216);
+    border-radius: 6px;
+    height: 25px;
+    width: 300px;
+}
+
+.buttonSubmit{
+    background: rgb(47, 189, 47);
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 35px; 
+    width: 309px;
+}
+.buttonSubmit:hover{
+    background-color: green;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+}
+
+.buttonValidate{
+    background: rgb(47, 189, 47);
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 30px; 
+    width: 100px;
+}
+.buttonValidate:hover{
+    background-color: green;
+    font-weight: bolder;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+
+}

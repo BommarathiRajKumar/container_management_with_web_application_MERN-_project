@@ -1,9 +1,9 @@
 import {React} from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
-import Home from "./HomePage"
-import Signup from "./Signup"
-import Login from "./Login"
-import Profile from './Profile';
+import Home from "./components/homePage"
+import Signup from "./components/signupPage"
+import Login from "./components/loginPage"
+import Profile from "./components/profilePage";
 
 
 

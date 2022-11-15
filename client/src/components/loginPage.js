@@ -1,6 +1,6 @@
 import { useState} from "react";
 import axios from "axios";
-import "./login.css";
+import loginPageCss from "../css/loginPage.module.css";
 import { Redirect } from "react-router-dom";
  
     //if you want to run any fun after return then use useEffect(Hook) fun/method
@@ -63,27 +63,30 @@ const Login = () => {
     
 
     return( 
-        <div style={{position: "absolute", left: 600}}>
+        <div>
              
-            <h1>Container Manage Platform</h1>
-            {credentialsErr ? <div className="error">Invalid Credentails Please check the mob and password</div>: null}
-            {serverErr ?<div className="error">Internall Server Error please try again after some time.</div>:null}
-
-            <form onSubmit={userCredentialsSubmitHandler} autoComplete="of">
-                <div>Mobile Number</div>
-                <input type="text" className="input" name="mobileNumber" value={mobileNumber} onChange={updateHandler} /><br/><br/>
-
-                <div>Password</div>
-                <a href="http://localhost:3000" id="forgotPassword">Forgot password</a>
-                <input type="password" className="input" name="password" value={password} onChange={updateHandler}/><br/><br/>
-
-                <button className="button" style={{background: "green", height: 35}}>Login</button><br/><br/><br/>
-            </form>
+            <h1 id={loginPageCss.h1Id}>Container Manage Platform</h1>
+            <div style={{position: "absolute",top:100, left: 600}}>
+                {credentialsErr ? <div className={loginPageCss.error}>Invalid Credentails Please check the mob and password</div>: null}
+                {serverErr ?<div className={loginPageCss.error}>Internall Server Error please try again after some time.</div>:null}
             
-            <div>---------------------New to CMP?-------------------</div><br/>
-            <button className="button"  onClick={signupRedirect} style={{background: "grey", height: 46}}>Create an account</button>
+            
+                <form onSubmit={userCredentialsSubmitHandler} autoComplete="of">
+                    <div className={loginPageCss.divColor}>Mobile Number</div>
+                    <input type="text" className={loginPageCss.input} name="mobileNumber" value={mobileNumber} onChange={updateHandler} /><br/><br/>
 
+                    <div className={loginPageCss.divColor}>
+                        Password<div className={loginPageCss.space1}></div>
+                        <a className={loginPageCss.forgotPassword} href="http://localhost:3000">Forgot password</a>
+                    </div>
+                    <input type="password" className={loginPageCss.input} name="password" value={password} onChange={updateHandler}/><br/><br/>
 
+                    <button className={loginPageCss.buttonLogin}>Login</button><br/><br/><br/>
+                </form>
+            
+                <div className={loginPageCss.divColor}>---------------------New to CMP?-------------------</div><br/>
+                <button className={loginPageCss.buttonCreateAccount} onClick={signupRedirect}>Create an account</button>
+            </div>
         </div>
     )
 }

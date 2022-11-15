@@ -3,7 +3,7 @@ import {Redirect} from "react-router-dom"
 import axios from 'axios'
 
 
-function Profile(){
+const Profile = () => {
     const [token, setToken] = useState(localStorage.getItem('token'))
     const [data,setData] = useState(null);
     

@@ -1,0 +1,62 @@
+body{
+    background-color: #282c34;
+}
+.menuBar{
+    background-color: lightblue;
+    border-radius: 8px;
+    height: 100px;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+
+}
+h1#wellcomenote{
+    font-size: 35px;
+    position: relative;
+    width: 718px;
+    top: 12px;
+    left: 400px;
+}
+
+
+.buttonLogin{
+    background-color: rgb(47, 189, 47);
+    color: white;
+    font-size: 13px;
+    border-radius: 6px;
+    cursor: pointer; 
+    height: 40px;
+    width: 80px;
+    position: absolute;
+    top: 26px;
+    right: 120px;
+}
+.buttonLogin:hover{
+    background-color: green;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+}
+.buttonCreateAccount{
+    background-color: rgb(47, 189, 47);
+    color: white;
+    font-size: 13px;
+    border-radius: 6px;
+    cursor: pointer; 
+    height: 40px;
+    width: 80px;
+    position: absolute;
+    top: 26px;
+    right: 30px;
+}
+.buttonCreateAccount:hover{
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+    
+}

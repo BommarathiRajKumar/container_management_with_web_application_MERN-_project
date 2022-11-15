@@ -1,0 +1,66 @@
+h1#h1Id{
+    color: rgb(223, 220, 220);
+    position: absolute;
+    left: 560px;
+}
+.divColor{
+    color: rgb(223, 220, 220);
+}
+.error{
+    color: red;
+}
+
+.input{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: rgb(177, 216, 216);
+    border-radius: 6px;
+    height: 25px;
+    width: 300px;
+}
+.space1{
+    width: 138px;
+    display: inline-block;
+}
+
+.forgotPassword{
+    color: rgb(225, 71, 71);
+    text-decoration: none;
+}
+.forgotPassword:hover{
+    font-weight: bold;
+}
+
+.buttonLogin{
+    background-color: rgb(47, 189, 47);
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 35px; 
+    width: 309px;
+}
+.buttonLogin:hover{
+    background-color: green;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+}
+
+
+.buttonCreateAccount{
+    background-color: grey;
+    color: white;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 46px;
+    width: 309px;
+}
+.buttonCreateAccount:hover{
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px black;
+    
+}
